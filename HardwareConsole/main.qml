@@ -17,7 +17,7 @@ ApplicationWindow {
     minimumWidth: width
     visible: true
     title: qsTr("Hardware Console")
-    property string settingsPath: "../HardwareConsole/"
+    property string settingsPath: "../user-file/"
 
     JsonReader {
         id: hardwareListReader
