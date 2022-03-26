@@ -4,5 +4,6 @@
         <file>HardwareDelegate.qml</file>
         <file>HardwareSpecificsDelegate.qml</file>
         <file>HardwareSpecificsFunctionDelegate.qml</file>
+        <file>qtquickcontrols2.conf</file>
     </qresource>
 </RCC>
