@@ -31,3 +31,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     jsonreader.h
+
+RC_ICONS = QTrap.ico
