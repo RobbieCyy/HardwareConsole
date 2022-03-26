@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>HardwareDelegate.qml</file>
+        <file>HardwareSpecificsDelegate.qml</file>
+        <file>HardwareSpecificsFunctionDelegate.qml</file>
     </qresource>
 </RCC>
