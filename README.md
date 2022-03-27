@@ -16,11 +16,9 @@
 
 - 请参考[这篇文档](https://www.conventionalcommits.org/zh-hans/v1.0.0/)
 
-
-
 ### Todo List
 
-- [ ] 调整Json文件结构，将具体设备和设备接口分开，并改写相应文件
+- [x] 调整Json文件结构，将具体设备和设备接口分开，并改写相应文件
 - [ ] 支持socket功能，实现相关UI，并测试是否能得到toptica激光器的参数
 - [ ] 支持websocket功能，并编写python测试程序测试是否能通过python读取参数
 - [ ] 实现更多和激光器相关的操作
