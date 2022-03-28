@@ -1,90 +1,61 @@
 {
     "hardwares" : [
         {
-            "name" : "Laser",
+            "category" : "Laser",
+            "functions" : [
+                {
+                    "name" : "Set current"
+                },
+                {
+                    "name" : "Get current"
+                },
+                {
+                    "name" : "Set voltage"
+                },
+                {
+                    "name" : "Get voltage"
+                }],
             "specifics" : [
                 {
-                    "name" : "370 Laser",
-                    "functions" : [
-                        {
-                            "name" : "Set current"
-                        },
-                        {
-                            "name" : "Get current"
-                        },
-                        {
-                            "name" : "Set voltage"
-                        },
-                        {
-                            "name" : "Get voltage"
-                        }
-                    ]
+                    "name" : "370 Laser"
                 },
                 {
-                    "name" : "399 Laser",
-                    "functions" : [
-                        {
-                            "name" : "Set current"
-                        },
-                        {
-                            "name" : "Get current"
-                        },
-                        {
-                            "name" : "Set voltage"
-                        },
-                        {
-                            "name" : "Get voltage"
-                        }
-                    ]
+                    "name" : "399 Laser"
                 },
                 {
-                    "name" : "935 Laser",
-                    "functions" : [
-                        {
-                            "name" : "Set current"
-                        },
-                        {
-                            "name" : "Get current"
-                        },
-                        {
-                            "name" : "Set voltage"
-                        },
-                        {
-                            "name" : "Get voltage"
-                        }
-                    ]
+                    "name" : "935 Laser"
                 }
             ]
         },
         {
-            "name" : "Wavemeter",
+            "category" : "Wavemeter",
+            "functions" : [
+                {
+                    "name" : "Get wavelength"
+                },
+                {
+                    "name" : "Set lock"
+                },
+                {
+                    "name" : "Set lock wavelength"
+                }
+            ],
             "specifics" : [
                 {
-                    "name" : "Channel 1",
-                    "functions" : [
-                        {
-                            "name" : "Get wavelength"
-                        },
-                        {
-                            "name" : "Set lock"
-                        },
-                        {
-                            "name" : "Set lock wavelength"
-                        }
-                    ]
+                    "name" : "Channel 1"
                 }
             ]
         },
         {
-            "name" : "SignalGenerator",
+            "category" : "SignalGenerator",
+            "functions" : [
+                {
+                    "name" : "Set wave file"
+                }
+            ],
             "specifics" : [
                 {
-                    "name" : "Channel A",
-                    "functions" : [
-                        {
-                            "name" : "Set wave file"
-                        }
-                    ]
+                    "name" : "Channel A"                    
                 }
             ]
         }
