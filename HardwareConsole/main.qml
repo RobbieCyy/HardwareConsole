@@ -3,6 +3,7 @@ import QtQuick.Window 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.11
 import QtQml.Models 2.12
+import QtQuick.Controls.Material 2.12
 import JsonReader 1.0
 
 // version 1.0
@@ -29,7 +30,7 @@ ApplicationWindow {
         text: qsTr("Menu")
         font.family: "Arial Black"
         font.pointSize: 30
-        width: 220
+        width: 250
         height: 50
         anchors.left: parent.left
         anchors.top: parent.top
@@ -37,19 +38,9 @@ ApplicationWindow {
         verticalAlignment: Text.AlignVCenter
     }
 
-    Rectangle {
-        id: horizontalSeperator
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.topMargin: menuLabel.height
-        color: "white"
-        width: menuLabel.width
-        height: 5
-    }
-
     ListView {
         id: hardwareListView
-        width: 220
+        width: menuLabel.width
         height: parent.height-menuLabel.height
         anchors.bottom: parent.bottom
         model: ListModel {}
@@ -67,12 +58,13 @@ ApplicationWindow {
     Rectangle {
         id: verticalSeperator
         anchors.top: parent.top
+        anchors.topMargin: 10
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.leftMargin: hardwareListView.width
-        color: "white"
+        color: Material.theme === Material.Dark ? "white" : "black"
         height: parent.height
-        width: 5
+        width: 2
     }
 
     ListView {
@@ -83,6 +75,9 @@ ApplicationWindow {
         anchors.right: parent.right
         model: ListModel {}
         delegate: HardwareSpecificsDelegate {}
+        Component.onCompleted: {
+            setHardwareSpecificModelByIndex(0)
+        }
 
         function setHardwareSpecificModelByIndex(index) {
             model.clear()

@@ -9,12 +9,36 @@ ItemDelegate {
     width: parent.width
     height: 50
     checkable: true
-    highlighted: ListView.isCurrentItem
 
     signal setHardware(int index)
 
+    property bool chosen : ListView.view.currentIndex === index
+
     Component.onCompleted: {
         this.setHardware.connect(hardwareSpecificsListView.setHardwareSpecificModelByIndex)
+    }
+
+    background: Item {
+        anchors.fill: parent
+        Rectangle {
+            anchors.fill: parent
+            color: Material.background
+            anchors.bottomMargin: -20
+            anchors.leftMargin: -2
+            anchors.rightMargin: -2
+            border.color: chosen ? "#00BCD4" : "ghostwhite"
+            border.width: 2
+            radius: 10
+        }
+
+        Rectangle {
+            width: parent.width
+            height: 20
+            color: Material.background
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: -20
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
     }
 
     onClicked: {
@@ -23,6 +47,7 @@ ItemDelegate {
     }
     font.pixelSize: hovered ? 26 : 24
     font.family: "Calibri"
-    font.bold: highlighted
-    text: model.name
+    font.bold: chosen
+    text: chosen ? model.name.toUpperCase() : model.name
+    Material.foreground: chosen ? Material.Cyan : Material.White
 }
