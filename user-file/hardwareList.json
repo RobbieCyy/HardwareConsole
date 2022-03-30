@@ -47,7 +47,7 @@
             ]
         },
         {
-            "category" : "SignalGenerator",
+            "category" : "Signal Generator",
             "functions" : [
                 {
                     "name" : "Set wave file"

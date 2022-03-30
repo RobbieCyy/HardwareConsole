@@ -9,9 +9,32 @@ ItemDelegate {
     height: chosen ? hardwareSpecificsFunctionListView.height + hardwareSpecificsNameLabel.height : hardwareSpecificsNameLabel.height
     width: hardwareSpecificsListView.width
 
-    checkable: true
+    highlighted: false
 
     onClicked: ListView.view.currentIndex = index
+
+    background: Item {
+        anchors.fill: parent
+        Rectangle {
+            anchors.fill: parent
+            color: Material.background
+            anchors.bottomMargin: -20
+            anchors.leftMargin: -2
+            anchors.rightMargin: -2
+            border.color: Material.theme === Material.Dark ? "ghostwhite" : "midnightblue"
+            border.width: 2
+            radius: 10
+        }
+
+        Rectangle {
+            width: parent.width
+            height: 20
+            color: Material.background
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: -20
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+    }
 
     property bool chosen: ListView.isCurrentItem
     property ListModel functions: model.functions
