@@ -3,6 +3,7 @@ import QtQuick.Window 2.12
 import QtQuick.Controls 2.15
 
 import AndorCCD.module 1.0
+import SocketServer.module 1.0
 
 Window {
     visible: true
@@ -17,7 +18,7 @@ Window {
         property int counter: 0
         onTriggered: {
             if (ccd.keepAcquisition()) {
-                ccd.startAcquisitionAndGetData()
+                ccd.startAcquisitionAndGetData(false)
             }
             else if(counter == 0) {
                 ccd.getTemperature()
@@ -140,7 +141,6 @@ Window {
                     Component.onCompleted: {
                         currentIndex = indexOfValue(4)
                         ccd.setReadMode(4) // image
-                        ccd.setImage(1, 1, 1, ccd.detectorWidth(), 1, ccd.detectorHeight()) //near “Full Resolution Image”
                     }
                     model: [
                         { value: 0, text: qsTr("Full Vertical Binning") },
@@ -149,6 +149,69 @@ Window {
                         { value: 3, text: qsTr("Single-Track") },
                         { value: 4, text: qsTr("Image") }
                     ]
+                }
+            }
+
+            Column {
+
+                function loadParameters() {
+                    ccd.setImage(1, 1, ccd.hstart(), ccd.hend(), ccd.vstart(), ccd.vend())
+                }
+
+                Label {
+                    text: qsTr("Start column: ")
+                }
+                TextField {
+                    text: qsTr("1")
+                    validator: IntValidator {bottom: 1; top: ccd.detectorWidth();}
+                    focus: true
+                    onAccepted: {
+                        ccd.setHstart(Number(text))
+                        parent.loadParameters()
+                    }
+                }
+                Label {
+                    text: qsTr("End column: ")
+                }
+                TextField {
+                    text: qsTr("%1").arg(ccd.detectorWidth())
+                    validator: IntValidator {bottom: 1; top: ccd.detectorWidth();}
+                    focus: true
+                    onAccepted: {
+                        ccd.setHend(Number(text))
+                        parent.loadParameters()
+                    }
+                }
+                Label {
+                    text: qsTr("Start row: ")
+                }
+                TextField {
+                    text: qsTr("1")
+                    validator: IntValidator {bottom: 1; top: ccd.detectorHeight();}
+                    focus: true
+                    onAccepted: {
+                        ccd.setVstart(Number(text))
+                        parent.loadParameters()
+                    }
+                }
+                Label {
+                    text: qsTr("End row: ")
+                }
+                TextField {
+                    text: qsTr("%1").arg(ccd.detectorHeight())
+                    validator: IntValidator {bottom: 1; top: ccd.detectorHeight();}
+                    focus: true
+                    onAccepted: {
+                        ccd.setVend(Number(text))
+                        parent.loadParameters()
+                    }
+                }
+                Component.onCompleted: {
+                    ccd.setHstart(1)
+                    ccd.setHend(ccd.detectorWidth())
+                    ccd.setVstart(1)
+                    ccd.setVend(ccd.detectorHeight())
+                    loadParameters()
                 }
             }
 
@@ -174,18 +237,21 @@ Window {
                 }
             }
 
-            Button {
-                text: "Start Acquisition"
-                onClicked: {
-                    ccd.setDataProcessed()
-                    ccd.startAcquisitionAndGetData()
+            Row {
+                Button {
+                    text: "Start Acquisition"
+                    onClicked: {
+                        ccd.setDataProcessed()
+                        ccd.startAcquisitionAndGetData(false)
+                    }
+                }
+
+                Button {
+                    text: "Stop Acquisition"
+                    onClicked: ccd.stopAcquisition()
                 }
             }
 
-            Button {
-                text: "Stop Acquisition"
-                onClicked: ccd.stopAcquisition()
-            }
         }
     }
 
@@ -199,6 +265,24 @@ Window {
         onDataProcessed: ccdImage.reload()
         Component.onCompleted: {
             dataHandler.setCCD(this)
+        }
+    }
+
+    SocketServer {
+        id: server
+
+        onGetImageData: {
+            ccd.setDataProcessed()
+            ccd.startAcquisitionAndGetData(true)
+        }
+        onGetImageSize: {
+            let size = {}
+            size.width = ccd.hend()-ccd.hstart()+1
+            size.height = ccd.vend()-ccd.vstart()+1
+            sendText(JSON.stringify(size))
+        }
+        Component.onCompleted: {
+            dataHandler.setServer(this)
         }
     }
 }

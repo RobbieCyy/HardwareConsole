@@ -16,31 +16,50 @@ void DataHandler::setImageProvider(CCDImageProvider *imageProvider)
     m_imageProvider = imageProvider;
 }
 
-void DataHandler::generateImageData(unsigned short *data, int width, int height) {
+void DataHandler::setServer(SocketServer *server)
+{
+    m_server = server;
+    hasServer = true;
+}
+
+void DataHandler::generateImageData(unsigned short *data, bool uploadData) {
+    int width = m_ccd->hend() - m_ccd->hstart() + 1;
+    int height = m_ccd->vend() - m_ccd->vstart() + 1;
+
     int temp;
     int min = 65535;
     int max = 0;
-    for (int i=0; i<512; i++)
-        for(int j=0; j<512; j++) {
-            if(data[i*512+j]<min) {
-                min = data[i*512+j];
+    QByteArray encode_data;
+    for (int i=0; i<width; i++)
+        for(int j=0; j<height; j++) {
+            if(data[i*height+j]<min) {
+                min = data[i*height+j];
             }
-            if(data[i*512+j]>max) {
-                max = data[i*512+j];
+            if(data[i*height+j]>max) {
+                max = data[i*height+j];
             }
-            temp = (data[i*512+j]-lowCount) * 256 / (highCount-lowCount);
+            temp = (data[i*height+j]-lowCount) * 256 / (highCount-lowCount);
             if(temp < 0) {
                 temp = 0;
             }
             else if(temp > 255) {
                 temp = 255;
             }
-            m_imageData[i*512+j] = temp;
+            m_imageData[i*height+j] = temp;
+            if (uploadData) {
+                char a = (data[i*height+j] >> 8) & 0xff;
+                char b = data[i*height+j] & 0xff;
+                encode_data.append(a);
+                encode_data.append(b);
+            }
         }
     if(m_autoScale) {
         lowCount = min;
         highCount = max;
     }
     m_imageProvider->generateImage(m_imageData, width, height);
+    if (hasServer && uploadData) {
+        m_server->sendData(encode_data);
+    }
     m_ccd->setDataProcessed();
 }

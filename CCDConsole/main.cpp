@@ -1,7 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include "ccdimageprovider.h"
 #include "datahandler.h"
 
 int main(int argc, char *argv[])
@@ -13,6 +12,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     qmlRegisterType<AndorCCD>("AndorCCD.module", 1, 0, "AndorCCD");
+    qmlRegisterType<SocketServer>("SocketServer.module", 1, 0, "SocketServer");
 
     QQmlApplicationEngine engine;
     CCDImageProvider *ccdImageProvider = new CCDImageProvider;

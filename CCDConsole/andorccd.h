@@ -19,6 +19,10 @@ private:
     int	m_highGain;  // maximum temperature
     int m_gblXPixels; // number of horizontal pixels of the detector
     int	m_gblYPixels; // number of horizontal pixels of the detector
+    int m_hstart;  // Start column
+    int	m_hend;  // End column
+    int m_vstart;  // Start row
+    int	m_vend;  // End row
     bool m_keepAcquisition = false;
     bool m_dataProcessed = false;
     unsigned short m_data[512*512];
@@ -26,7 +30,7 @@ private:
 signals:
     void temperatureChange(float temperature, unsigned int status);
     void acquisitionTimingsChange(float exposure, float accumulate, float kinetic, unsigned int status);
-    void finishAcquisition(unsigned short *data, int width, int height);
+    void finishAcquisition(unsigned short *data, bool uploadData);
     void dataProcessed();
 
 public slots:
@@ -45,7 +49,7 @@ public slots:
     void setImage(int hbin, int vbin, int hstart, int hend, int vstart, int vend);
     void setEMCCDGain(int gain);
     void setTriggerMode(int mode);
-    void startAcquisitionAndGetData();
+    void startAcquisitionAndGetData(bool uploadData);
     void stopAcquisition();
     void setDataProcessed() { emit dataProcessed(); m_dataProcessed = true; };
     int minTemp() { return m_minTemp; };
@@ -54,6 +58,14 @@ public slots:
     int	highGain() { return m_highGain; };
     int detectorWidth() { return m_gblXPixels; };
     int	detectorHeight() { return m_gblYPixels; };
+    int hstart() { return m_hstart; };
+    int	hend() { return m_hend; };
+    int vstart() { return m_vstart; };
+    int	vend() { return m_vend; };
+    void setHstart(int hstart) { m_hstart = hstart; };
+    void setHend(int hend) { m_hend = hend; };
+    void setVstart(int vstart) { m_vstart = vstart; };
+    void setVend(int vend) { m_vend = vend; };
     bool keepAcquisition() { return m_keepAcquisition; };
 
 
