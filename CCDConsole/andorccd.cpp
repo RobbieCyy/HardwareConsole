@@ -292,7 +292,7 @@ void AndorCCD::setTriggerMode(int mode)
     }
 }
 
-void AndorCCD::startAcquisitionAndGetData()
+void AndorCCD::startAcquisitionAndGetData(bool uploadData)
 {
     int status;
     errorValue = GetStatus(&status);
@@ -309,15 +309,18 @@ void AndorCCD::startAcquisitionAndGetData()
         qDebug() << tr("Acquisition Event not occurred\n");
         return;
     }
-    errorValue = GetAcquiredData16(m_data, 512*512);
+    errorValue = GetAcquiredData16(m_data, (m_hend-m_hstart+1)*(m_vend-m_vstart+1));
     if(errorValue!=DRV_SUCCESS) {
         qDebug() << tr("Data copy failed.\n");
     }
     else {
         //qDebug() << tr("Data copied.\n");
         m_dataProcessed = false;
-        m_keepAcquisition = true;
-        emit finishAcquisition(m_data, 512, 512);
+        if (!uploadData) {
+            m_keepAcquisition = true;
+        }
+
+        emit finishAcquisition(m_data, uploadData);
     }
 }
 

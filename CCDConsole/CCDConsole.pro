@@ -10,7 +10,8 @@ SOURCES += \
         andorccd.cpp \
         ccdimageprovider.cpp \
         datahandler.cpp \
-        main.cpp
+        main.cpp \
+        socketserver.cpp
 
 RESOURCES += qml.qrc
 
@@ -29,7 +30,8 @@ HEADERS += \
     ATMCD32D.H \
     andorccd.h \
     ccdimageprovider.h \
-    datahandler.h
+    datahandler.h \
+    socketserver.h
 
 win32: LIBS += -L$$PWD/./ -latmcd64m
 

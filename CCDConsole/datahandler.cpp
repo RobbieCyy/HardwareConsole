@@ -16,31 +16,51 @@ void DataHandler::setImageProvider(CCDImageProvider *imageProvider)
     m_imageProvider = imageProvider;
 }
 
-void DataHandler::generateImageData(unsigned short *data, int width, int height) {
+void DataHandler::setServer(SocketServer *server)
+{
+    m_server = server;
+    hasServer = true;
+}
+
+void DataHandler::generateImageData(unsigned short *data, bool uploadData) {
+    int width = m_ccd->hend() - m_ccd->hstart() + 1;
+    int height = m_ccd->vend() - m_ccd->vstart() + 1;
+
     int temp;
     int min = 65535;
     int max = 0;
-    for (int i=0; i<512; i++)
-        for(int j=0; j<512; j++) {
-            if(data[i*512+j]<min) {
-                min = data[i*512+j];
-            }
-            if(data[i*512+j]>max) {
-                max = data[i*512+j];
-            }
-            temp = (data[i*512+j]-lowCount) * 256 / (highCount-lowCount);
-            if(temp < 0) {
-                temp = 0;
-            }
-            else if(temp > 255) {
-                temp = 255;
-            }
-            m_imageData[i*512+j] = temp;
+    QByteArray encode_data;
+    for (int i=0; i<512*512; i++)
+        m_imageData[i] = 0;
+    for (int i=0; i<width*height; i++) {
+        if(data[i]<min) {
+            min = data[i];
         }
+        if(data[i]>max) {
+            max = data[i];
+        }
+        temp = (data[i]-lowCount) * 256 / (highCount-lowCount);
+        if(temp < 0) {
+            temp = 0;
+        }
+        else if(temp > 255) {
+            temp = 255;
+        }
+        m_imageData[((i%width)+m_ccd->hstart()-1)*512+(i/width+m_ccd->vstart()-1)] = temp;
+        if (uploadData) {
+            char a = (data[i] >> 8) & 0xff;
+            char b = data[i] & 0xff;
+            encode_data.append(a);
+            encode_data.append(b);
+        }
+    }
     if(m_autoScale) {
         lowCount = min;
         highCount = max;
     }
-    m_imageProvider->generateImage(m_imageData, width, height);
+    m_imageProvider->generateImage(m_imageData, 512, 512);
+    if (hasServer && uploadData) {
+        m_server->sendData(encode_data);
+    }
     m_ccd->setDataProcessed();
 }
