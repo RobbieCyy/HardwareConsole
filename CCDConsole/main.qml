@@ -28,14 +28,20 @@ Window {
     }
 
     Row {
-        Image {
-            id: ccdImage
-            function reload() {
-                source = "image://ccd/random?id=" + Math.random()
+        Column {
+            Image {
+                id: ccdImage
+                function reload() {
+                    source = "image://ccd/random?id=" + Math.random()
+                }
+                source: "image://ccd/random"
+                cache: false
+                asynchronous: false
             }
-            source: "image://ccd/random"
-            cache: false
-            asynchronous: false
+
+            Label {
+                text: qsTr("Ion Number: %1").arg(server.ionPositions.length)
+            }
         }
 
         Column {
@@ -271,6 +277,8 @@ Window {
     SocketServer {
         id: server
 
+        property var ionPositions: []
+
         onGetImageData: {
             ccd.setDataProcessed()
             ccd.startAcquisitionAndGetData(true)
@@ -280,6 +288,13 @@ Window {
             size.width = ccd.hend()-ccd.hstart()+1
             size.height = ccd.vend()-ccd.vstart()+1
             sendText(JSON.stringify(size))
+        }
+        onGetIonPositions: {
+            sendText(JSON.stringify(this.ionPositions))
+        }
+        onSetIonPositions: {
+            this.ionPositions = JSON.parse(posStr)
+            console.log(this.ionPositions)
         }
         Component.onCompleted: {
             dataHandler.setServer(this)

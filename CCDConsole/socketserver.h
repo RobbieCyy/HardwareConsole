@@ -23,6 +23,8 @@ public slots:
 signals:
     void getImageData();
     void getImageSize();
+    void getIonPositions();
+    void setIonPositions(QString posStr);
 
 private:
     QTcpServer server;

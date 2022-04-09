@@ -72,6 +72,12 @@ void SocketServer::onReadyRead(QTcpSocket *socket)
     if (recv_text == "GET /image/size\r\n") {
         emit getImageSize();
     }
+    if (recv_text == "GET /ion/positions\r\n") {
+        emit getIonPositions();
+    }
+    if (recv_text.startsWith("SET /ion/positions")) {
+        emit setIonPositions(recv_text.mid(18));
+    }
     //qDebug() << tr("[%1:%2]")
     //            .arg(socket->peerAddress().toString())
     //            .arg(socket->peerPort());
